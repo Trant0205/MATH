@@ -34,6 +34,9 @@ body.nav-on #side{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.08)}
 #main{margin:0 auto;max-width:860px;padding:60px 64px 200px}
 #topbar{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 24px;z-index:9}
 #topbar .stat{font-size:13px;color:#888}
+#timerBox{display:inline-flex;align-items:center;gap:6px}
+#timer{min-width:58px;text-align:center;font-variant-numeric:tabular-nums;color:#555}
+#timerBox .tgl{margin-left:0;padding:2px 10px;font-size:12px}
 #topbar input{flex:0 0 220px;border:1px solid var(--line);border-radius:2em;padding:5px 14px;font-size:13px;outline:none;font-family:inherit}
 #topbar input:focus{border-color:var(--accent)}
 .tgl{margin-left:auto;font-size:13px;border:1px solid var(--ink);border-radius:2em;padding:4px 16px;cursor:pointer;background:transparent;font-family:inherit}
@@ -212,6 +215,8 @@ body.nav-on #side{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.08)}
 <div id="topbar">
 <button id="navBtn" title="展开/收起目录">☰</button>
 <span class="stat">熟练度 <b id="progress">0 / 232</b></span>
+<span class="stat">今日复习 <b id="todayCnt">0</b> 题</span>
+<span class="stat" id="timerBox">⏱ <b id="timer">00:00:00</b><button class="tgl" id="timerBtn">开始</button><button class="tgl" id="timerReset">重置</button></span>
 <input id="q" placeholder="搜索题号或题干…">
 <button class="tgl" id="expBtn" title="把勾框进度存为文件">导出进度</button>
 <button class="tgl" id="impBtn" title="从文件恢复进度">导入</button>
@@ -4399,6 +4404,7 @@ document.querySelectorAll('.cb').forEach(el=>{
     for(let i=0;i<3;i++)a[i]=i<target?1:0;
     document.querySelectorAll(`.cb[data-p="${CSS.escape(p)}"]`).forEach((c,i)=>c.classList.toggle('on',!!a[i]));
     save();
+    if(a.some(Boolean))todayMark(p);
   };
 });
 updateStat();
@@ -4552,6 +4558,41 @@ if(_view.m&&_view.m!=='full'){
   if(mb)mb.click();
 }
 if(_view.y)window.scrollTo(0,_view.y);
+// ===== 正计时器（手动开始/暂停 + 重置，刷新页面后保持）=====
+const TKEY='ctb_timer_v1';
+let _t={acc:0,t0:0,run:false};
+try{_t=Object.assign(_t,JSON.parse(localStorage.getItem(TKEY)||'{}'))}catch(e){}
+function tSave(){try{localStorage.setItem(TKEY,JSON.stringify(_t))}catch(e){}}
+function tElapsed(){return _t.acc+(_t.run?Math.floor((Date.now()-_t.t0)/1000):0)}
+function tFmt(s){const h=String(Math.floor(s/3600)).padStart(2,'0'),m=String(Math.floor(s%3600/60)).padStart(2,'0'),x=String(s%60).padStart(2,'0');return h+':'+m+':'+x}
+function tPaint(){
+  const b=document.getElementById('timerBtn');
+  document.getElementById('timer').textContent=tFmt(tElapsed());
+  b.textContent=_t.run?'暂停':'开始';
+  b.classList.toggle('on',_t.run);
+}
+document.getElementById('timerBtn').onclick=()=>{
+  if(_t.run){_t.acc=tElapsed();_t.run=false}
+  else{_t.t0=Date.now();_t.run=true}
+  tSave();tPaint();
+};
+document.getElementById('timerReset').onclick=()=>{
+  _t={acc:0,t0:0,run:false};tSave();tPaint();
+};
+setInterval(tPaint,1000);
+tPaint();
+// ===== 今日复习计数：当天每道题首次打任意勾记 1 =====
+const DKEY='ctb_today_v1';
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+let _td={d:'',pids:[]};
+try{_td=Object.assign(_td,JSON.parse(localStorage.getItem(DKEY)||'{}'))}catch(e){}
+function tdSave(){try{localStorage.setItem(DKEY,JSON.stringify(_td))}catch(e){}}
+function todayPaint(){document.getElementById('todayCnt').textContent=_td.pids.length}
+function todayMark(p){
+  if(_td.d!==todayStr()){_td={d:todayStr(),pids:[]};}
+  if(!_td.pids.includes(p)){_td.pids.push(p);tdSave();todayPaint()}
+}
+todayPaint();
 </script>
 </body>
 </html>
