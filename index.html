@@ -4499,6 +4499,7 @@ const ckSet=new Set();let chSel='all',qSel='';  // 空集 = 不筛选（显示�
 document.getElementById('q').oninput=function(){
   qSel=this.value.trim().toLowerCase();
   applyFlt();
+  saveFlt();
 };
 function applyFlt(){
   let shown=0;
@@ -4536,16 +4537,21 @@ function syncCkBtns(){
     x.classList.toggle('on',x.dataset.v==='all'?ckSet.size===0:ckSet.has(+x.dataset.v));
   });
 }
+// 筛选状态持久化
+const FKEY='ctb_flt_v1';
+function saveFlt(){try{localStorage.setItem(FKEY,JSON.stringify({ck:[...ckSet],ch:chSel,q:qSel,qr:document.getElementById('q').value}))}catch(e){}}
 document.querySelectorAll('#ckFlt button').forEach(b=>{
   b.onclick=()=>{
     if(b.dataset.v==='all'){ckSet.clear();}
     else{const k=+b.dataset.v;ckSet.has(k)?ckSet.delete(k):ckSet.add(k);}
     syncCkBtns();
     applyFlt();
+    saveFlt();
   };
 });
-document.getElementById('chFlt').onchange=function(){chSel=this.value;applyFlt()};
+document.getElementById('chFlt').onchange=function(){chSel=this.value;applyFlt();saveFlt()};
 // 记忆浏览位置（滚动位置 + 视图模式）
+if('scrollRestoration' in history)history.scrollRestoration='manual';  // 禁止浏览器原生恢复，避免覆盖脚本恢复
 const VKEY='ctb_view_v1';
 let _view={};try{_view=JSON.parse(localStorage.getItem(VKEY)||'{}')}catch(e){}
 function curMode(){return document.body.classList.contains('view-terms')?'terms':document.body.classList.contains('view-know')?'know':'full'}
@@ -4557,7 +4563,14 @@ if(_view.m&&_view.m!=='full'){
   const mb=document.querySelector(`.menu button[data-v="${_view.m}"]`);
   if(mb)mb.click();
 }
-if(_view.y)window.scrollTo(0,_view.y);
+// ===== 恢复上次的筛选状态（勾数多选 + 章节 + 搜索词），恢复后再回到上次滚动位置 =====
+let _flt={};try{_flt=JSON.parse(localStorage.getItem(FKEY)||'{}')}catch(e){}
+if(Array.isArray(_flt.ck))_flt.ck.forEach(x=>{if(x>=0&&x<=3)ckSet.add(x)});
+if(_flt.ch){chSel=_flt.ch;document.getElementById('chFlt').value=_flt.ch;}
+if(_flt.q){qSel=_flt.q;document.getElementById('q').value=_flt.qr||_flt.q;}
+syncCkBtns();
+applyFlt();
+window.addEventListener('load',()=>setTimeout(()=>{if(_view.y)window.scrollTo(0,_view.y)},50));  // 延迟到布局完成后恢复，避免被钳制到 0
 // ===== 正计时器（手动开始/暂停 + 重置，刷新页面后保持）=====
 const TKEY='ctb_timer_v1';
 let _t={acc:0,t0:0,run:false};
