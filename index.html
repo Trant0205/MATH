@@ -4561,7 +4561,19 @@ if('scrollRestoration' in history)history.scrollRestoration='manual';  // 禁止
 const VKEY='ctb_view_v1';
 let _view={};try{_view=JSON.parse(localStorage.getItem(VKEY)||'{}')}catch(e){}
 function curMode(){return document.body.classList.contains('view-terms')?'terms':document.body.classList.contains('view-know')?'know':'full'}
-function saveView(){try{localStorage.setItem(VKEY,JSON.stringify({y:window.scrollY,m:curMode()}))}catch(e){}}
+// 位置锚定：记录滚动位置处最靠上的可见题卡（pid + 卡内偏移），新增题目导致位移后可精确回到原题
+function findAnchor(y){
+  let best=null;
+  for(const c of document.querySelectorAll('#main .pcard')){
+    if(c.classList.contains('hide'))continue;
+    const top=c.getBoundingClientRect().top+window.scrollY;
+    if(top<=y+1)best={c,top};else break;
+  }
+  if(!best)return null;
+  const pe=best.c.querySelector('.pid');
+  return pe?{pid:pe.textContent,off:y-best.top}:null;
+}
+function saveView(){try{localStorage.setItem(VKEY,JSON.stringify({y:window.scrollY,a:findAnchor(window.scrollY),m:curMode()}))}catch(e){}}
 let _svT=null;
 window.addEventListener('scroll',()=>{clearTimeout(_svT);_svT=setTimeout(saveView,200)},{passive:true});
 window.addEventListener('beforeunload',saveView);
@@ -4576,7 +4588,18 @@ if(_flt.ch){chSel=_flt.ch;document.getElementById('chFlt').value=_flt.ch;}
 if(_flt.q){qSel=_flt.q;document.getElementById('q').value=_flt.qr||_flt.q;}
 syncCkBtns();
 applyFlt();
-window.addEventListener('load',()=>setTimeout(()=>{if(_view.y)window.scrollTo(0,_view.y)},50));  // 延迟到布局完成后恢复，避免被钳制到 0
+window.addEventListener('load',()=>setTimeout(()=>{  // 延迟到布局完成后恢复，避免被钳制到 0
+  const a=_view.a;
+  if(a&&a.pid){  // 优先按题卡锚点恢复：新增题目造成位移也能回到原题
+    for(const c of document.querySelectorAll('#main .pcard')){
+      if(c.classList.contains('hide'))continue;
+      if(c.querySelector('.pid')&&c.querySelector('.pid').textContent===a.pid){
+        window.scrollTo(0,c.getBoundingClientRect().top+window.scrollY+a.off);return;
+      }
+    }
+  }
+  if(_view.y)window.scrollTo(0,_view.y);  // 锚点失效（题目被删/被筛掉）退回像素位置
+},50));
 // ===== 正计时器（手动开始/暂停 + 重置，刷新页面后保持）=====
 const TKEY='ctb_timer_v1';
 let _t={acc:0,t0:0,run:false};
