@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="read">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -8,9 +8,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <style>
 :root{--accent:#8a6d3b;--ink:#3b3325;--ink-soft:#6b5f4a;--red:#a33}
-body[data-theme="day"]{--paper:#fffdf6;--paper-deep:#f6efdd;--soft:#faf5e8;--line:#ddd0b4}
-body[data-theme="read"]{--paper:#f1e8d0;--paper-deep:#e7dcbd;--soft:#f6efdb;--line:#d3c5a2}
-body[data-theme="night"]{--paper:#ede0c2;--paper-deep:#e0d0ab;--soft:#f2e7cb;--line:#c8b78e}
+:root[data-theme="day"]{--paper:#fffdf6;--paper-deep:#f6efdd;--soft:#faf5e8;--line:#ddd0b4}
+:root[data-theme="read"]{--paper:#f1e8d0;--paper-deep:#e7dcbd;--soft:#f6efdb;--line:#d3c5a2}
+:root[data-theme="night"]{--paper:#ede0c2;--paper-deep:#e0d0ab;--soft:#f2e7cb;--line:#c8b78e}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:auto}
 body{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","SimSun",serif;color:var(--ink);background:var(--paper);line-height:1.9}
@@ -96,10 +96,17 @@ body.nav-on #side{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.08)}
 #themeSeg button{border:none;background:transparent;color:var(--accent);font-size:12px;padding:4px 10px;cursor:pointer;font-family:inherit;letter-spacing:1px;white-space:nowrap}
 #themeSeg button+button{border-left:1px solid var(--accent)}
 #themeSeg button.on{background:var(--accent);color:#fff}
+/* 滚动条跟随纸张色 */
+html{scrollbar-width:thin;scrollbar-color:var(--line) var(--paper-deep)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--paper-deep)}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+::-webkit-scrollbar-corner{background:var(--paper-deep)}
 @media(max-width:900px){#main{padding:70px 22px 160px}}
 </style>
 </head>
-<body data-theme="read">
+<body>
 <div id="navTrigger"></div>
 <nav id="side">
 <div style="display:flex;justify-content:space-between;align-items:center">
@@ -4569,7 +4576,7 @@ if('scrollRestoration' in history)history.scrollRestoration='manual';  // 禁止
 const VKEY='ctb_view_v1';
 let _view={};try{_view=JSON.parse(localStorage.getItem(VKEY)||'{}')}catch(e){}
 // 色温三档（白日/阅读/夜读），随 ctb_view_v1 一起保存与恢复
-function applyTheme(t){document.body.dataset.theme=t;document.querySelectorAll('#themeSeg button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));}
+function applyTheme(t){document.documentElement.dataset.theme=t;document.querySelectorAll('#themeSeg button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));}
 document.querySelectorAll('#themeSeg button').forEach(b=>{b.onclick=()=>{applyTheme(b.dataset.t);saveView();};});
 if(_view.t)applyTheme(_view.t);
 function curMode(){return document.body.classList.contains('view-terms')?'terms':document.body.classList.contains('view-know')?'know':'full'}
@@ -4585,7 +4592,7 @@ function findAnchor(y){
   const pe=best.c.querySelector('.pid');
   return pe?{pid:pe.textContent,off:y-best.top}:null;
 }
-function saveView(){try{localStorage.setItem(VKEY,JSON.stringify({y:window.scrollY,a:findAnchor(window.scrollY),m:curMode(),t:document.body.dataset.theme}))}catch(e){}}
+function saveView(){try{localStorage.setItem(VKEY,JSON.stringify({y:window.scrollY,a:findAnchor(window.scrollY),m:curMode(),t:document.documentElement.dataset.theme}))}catch(e){}}
 let _svT=null;
 window.addEventListener('scroll',()=>{clearTimeout(_svT);_svT=setTimeout(saveView,200)},{passive:true});
 window.addEventListener('beforeunload',saveView);
