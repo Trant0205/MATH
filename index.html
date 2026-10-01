@@ -7,62 +7,65 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <style>
-:root{--accent:#ff8528;--ink:#1a1a1a;--paper:#ffffff;--soft:#f7f5f2;--line:#e5e0da}
+:root{--accent:#8a6d3b;--ink:#3b3325;--ink-soft:#6b5f4a;--red:#a33}
+body[data-theme="day"]{--paper:#fffdf6;--paper-deep:#f6efdd;--soft:#faf5e8;--line:#ddd0b4}
+body[data-theme="read"]{--paper:#f1e8d0;--paper-deep:#e7dcbd;--soft:#f6efdb;--line:#d3c5a2}
+body[data-theme="night"]{--paper:#ede0c2;--paper-deep:#e0d0ab;--soft:#f2e7cb;--line:#c8b78e}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:auto}
-body{font-family:"Century Schoolbook","Noto Serif SC","Songti SC",serif;color:var(--ink);background:var(--paper);line-height:1.9}
-#side{position:fixed;top:0;left:0;bottom:0;width:264px;overflow-y:auto;border-right:1px solid var(--line);background:var(--paper);padding:28px 18px 60px;z-index:30;transition:transform .25s ease;transform:translateX(-100%);box-shadow:none}
+body{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","SimSun",serif;color:var(--ink);background:var(--paper);line-height:1.9}
+#side{position:fixed;top:0;left:0;bottom:0;width:264px;overflow-y:auto;border-right:1px solid var(--line);background:var(--paper-deep);padding:28px 18px 60px;z-index:30;transition:transform .25s ease;transform:translateX(-100%);box-shadow:none}
 body.nav-on #side{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.08)}
 #navTrigger{position:fixed;top:0;left:0;bottom:0;width:26px;z-index:25;cursor:pointer}
-#navTrigger::after{content:"›";position:fixed;left:6px;top:50%;color:#ccc;font-size:18px;transition:.2s}
+#navTrigger::after{content:"›";position:fixed;left:6px;top:50%;color:#c8b78e;font-size:18px;transition:.2s}
 #navTrigger:hover::after{color:var(--accent);transform:scale(1.3)}
-#navBtn{border:1px solid var(--line);background:#fff;border-radius:8px;width:34px;height:32px;cursor:pointer;font-size:15px;line-height:1;color:var(--ink);flex:none}
+#navBtn{border:1px solid var(--line);background:var(--paper-deep);border-radius:8px;width:34px;height:32px;cursor:pointer;font-size:15px;line-height:1;color:var(--ink);flex:none}
 #navBtn:hover{border-color:var(--accent);color:var(--accent)}
 #side h1{font-size:19px;letter-spacing:.05em;margin-bottom:4px}
-#side .sub{font-size:12px;color:#999;margin-bottom:18px}
+#side .sub{font-size:12px;color:var(--ink-soft);margin-bottom:18px}
 .nch{margin-top:14px;font-weight:700;font-size:14px}
 .nch a{color:var(--ink);text-decoration:none;display:flex;align-items:baseline;gap:8px}
 .nch a:hover{color:var(--accent)}
 .ntp{padding-left:14px;font-size:12.5px;line-height:1.6}
-.ntp a{color:#666;text-decoration:none;display:flex;align-items:baseline;gap:8px}
+.ntp a{color:var(--ink-soft);text-decoration:none;display:flex;align-items:baseline;gap:8px}
 .ntp a:hover{color:var(--accent)}
-.ncnt{font-size:11px;color:#bbb;font-weight:400;flex:none}
+.ncnt{font-size:11px;color:#b09a6a;font-weight:400;flex:none}
 .nch .ncnt{color:var(--accent);font-size:12px}
-.nprog{font-size:11px;color:#bbb;font-weight:400;margin-left:auto;font-variant-numeric:tabular-nums;flex:none}
+.nprog{font-size:11px;color:#b09a6a;font-weight:400;margin-left:auto;font-variant-numeric:tabular-nums;flex:none}
 .nprog.done{color:var(--accent)}
-.cnt{font-size:12px;color:#bbb;font-weight:400;margin-left:12px;letter-spacing:.05em}
+.cnt{font-size:12px;color:#b09a6a;font-weight:400;margin-left:12px;letter-spacing:.05em}
 #main{margin:0 auto;max-width:860px;padding:60px 64px 200px}
-#topbar{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 24px;z-index:9}
-#topbar .stat{font-size:13px;color:#888}
+#topbar{position:fixed;top:0;left:0;right:0;height:52px;background:var(--paper-deep);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 24px;z-index:9}
+#topbar .stat{font-size:13px;color:var(--ink-soft)}
 #timerBox{display:inline-flex;align-items:center;gap:6px}
-#timer{min-width:58px;text-align:center;font-variant-numeric:tabular-nums;color:#555}
+#timer{min-width:58px;text-align:center;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
 #timerBox .tgl{margin-left:0;padding:2px 10px;font-size:12px}
-#topbar input{flex:0 0 220px;border:1px solid var(--line);border-radius:2em;padding:5px 14px;font-size:13px;outline:none;font-family:inherit}
+#topbar input{flex:0 0 220px;border:1px solid var(--line);border-radius:2em;padding:5px 14px;font-size:13px;outline:none;font-family:inherit;background:var(--paper);color:var(--ink)}
 #topbar input:focus{border-color:var(--accent)}
 .tgl{margin-left:auto;font-size:13px;border:1px solid var(--ink);border-radius:2em;padding:4px 16px;cursor:pointer;background:transparent;font-family:inherit}
 .tgl.on{background:var(--ink);color:#fff}
 .part{font-size:13px;letter-spacing:.35em;color:var(--accent);margin:80px 0 -40px;text-transform:uppercase}
 .chapter{font-size:26px;margin:72px 0 8px;padding-top:20px;letter-spacing:.02em;display:flex;align-items:baseline;gap:14px}
 .chapter .chnum{font-size:13px;color:var(--accent);letter-spacing:.15em}
-.topic{font-size:17px;margin:44px 0 14px;padding-left:12px;border-left:3px solid var(--ink)}
-.box{border:1.5px dashed #b8b2aa;background:var(--soft);padding:14px 20px;margin:0 0 22px;font-size:14.5px}
+.topic{font-size:17px;margin:44px 0 14px;padding-left:12px;border-left:3px solid var(--accent)}
+.box{border:1.5px dashed #c8b78e;background:var(--soft);padding:14px 20px;margin:0 0 22px;font-size:14.5px}
 .box p{margin:6px 0}
-.note{color:#8a857e;font-size:13.5px;padding:6px 0 6px 18px;border-left:2px solid var(--line);margin:2px 0 26px}
+.note{color:var(--ink-soft);font-size:13.5px;padding:6px 0 6px 18px;border-left:2px solid var(--line);margin:2px 0 26px}
 .note p{margin:4px 0}
 .prob{margin:26px 0 4px;font-size:15.5px}
-.pid{color:#2775B6;font-weight:700;margin-right:6px}
+.pid{color:var(--red);font-weight:700;margin-right:6px}
 .cbs{display:inline-flex;gap:5px;margin-right:10px;vertical-align:middle}
-.cb{width:15px;height:15px;border:1.5px solid #b8b2aa;border-radius:3px;display:inline-block;cursor:pointer;transition:.15s;background:#fff}
+.cb{width:15px;height:15px;border:1.5px solid #c8b78e;border-radius:3px;display:inline-block;cursor:pointer;transition:.15s;background:var(--paper)}
 .cb:hover{border-color:var(--accent)}
 .cb.on{background:var(--accent);border-color:var(--accent)}
-.cb.on::after{content:"✓";color:#fff;font-size:11px;display:flex;justify-content:center;line-height:14px}
+.cb.on::after{content:"✓";color:var(--paper);font-size:11px;display:flex;justify-content:center;line-height:14px}
 .pline{margin:4px 0}
 .pcard{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:8px;contain:layout style}
 .opts{margin:8px 0;display:flex;flex-wrap:wrap;gap:6px 22px}
 .opt{cursor:pointer;padding:2px 10px;border-radius:6px;border:1px solid transparent;transition:.15s}
 .opt:hover{border-color:var(--accent);color:var(--accent)}
-.opt.right{background:#e8f5e9;border-color:#2e7d32;color:#2e7d32;font-weight:700}
-.opt.wrong{background:#fdecea;border-color:#c0392b;color:#c0392b;text-decoration:line-through}
+.opt.right{background:rgba(150,214,160,.35);border-color:#3d9e52;color:#2b7a3e;font-weight:700}
+.opt.wrong{background:rgba(255,179,200,.35);border-color:#d6668a;color:#b8486e;text-decoration:line-through}
 .solTgl{font-size:12.5px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;margin:4px 0;font-family:inherit}
 .solTgl:hover{text-decoration:underline}
 .psolve.force-hide{display:none!important}
@@ -75,24 +78,28 @@ body.nav-on #side{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.08)}
 .view-terms .psolve.force-show .solve-only{display:block!important}
 .view-know .pcard,.view-know .note{display:none}
 .dropdown{position:relative;margin-left:auto}
-.menu{position:absolute;top:100%;right:0;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.10);display:none;flex-direction:column;min-width:130px;overflow:hidden;z-index:20}
+.menu{position:absolute;top:100%;right:0;background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.10);display:none;flex-direction:column;min-width:130px;overflow:hidden;z-index:20}
 .dropdown:hover .menu{display:flex}
 .menu button{border:none;background:none;padding:10px 18px;font-size:13px;text-align:left;cursor:pointer;font-family:inherit;color:var(--ink)}
 .menu button:hover{background:var(--soft);color:var(--accent)}
 .menu button.cur{font-weight:700;color:var(--accent)}
 .hide{display:none!important}
 .flt{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:16px;background:var(--soft)}
-.flab{font-size:11px;color:#999;margin:4px 0 6px;letter-spacing:.08em}
+.flab{font-size:11px;color:var(--ink-soft);margin:4px 0 6px;letter-spacing:.08em}
 .frow{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
-.frow button{border:1px solid var(--line);background:#fff;border-radius:2em;padding:2px 10px;font-size:11.5px;cursor:pointer;font-family:inherit;color:var(--ink)}
+.frow button{border:1px solid var(--line);background:var(--paper);border-radius:2em;padding:2px 10px;font-size:11.5px;cursor:pointer;font-family:inherit;color:var(--ink)}
 .frow button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-#chFlt{width:100%;border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:12px;font-family:inherit;background:#fff;color:var(--ink)}
+#chFlt{width:100%;border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:12px;font-family:inherit;background:var(--paper);color:var(--ink)}
 .fstat{font-size:11px;color:var(--accent);margin-top:6px;min-height:14px}
 #progress{font-size:12px;color:var(--accent)}
+#themeSeg{display:flex;border:1px solid var(--accent);border-radius:4px;overflow:hidden;flex:none}
+#themeSeg button{border:none;background:transparent;color:var(--accent);font-size:12px;padding:4px 10px;cursor:pointer;font-family:inherit;letter-spacing:1px;white-space:nowrap}
+#themeSeg button+button{border-left:1px solid var(--accent)}
+#themeSeg button.on{background:var(--accent);color:#fff}
 @media(max-width:900px){#main{padding:70px 22px 160px}}
 </style>
 </head>
-<body>
+<body data-theme="read">
 <div id="navTrigger"></div>
 <nav id="side">
 <div style="display:flex;justify-content:space-between;align-items:center">
@@ -222,6 +229,7 @@ body.nav-on #side{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.08)}
 <button class="tgl" id="expBtn" title="把勾框进度存为文件">导出进度</button>
 <button class="tgl" id="impBtn" title="从文件恢复进度">导入</button>
 <button class="tgl" id="clearBtn" title="清除所有选项作答痕迹">清除痕迹</button>
+<span id="themeSeg" title="纸张色温"><button data-t="day">白日</button><button data-t="read" class="on">阅读</button><button data-t="night">夜读</button></span>
 <input type="file" id="impFile" accept=".json" style="display:none">
 <div class="dropdown">
 <button class="tgl" id="modeBtn">完整版 ▾</button>
@@ -4560,6 +4568,10 @@ document.getElementById('chFlt').onchange=function(){chSel=this.value;applyFlt()
 if('scrollRestoration' in history)history.scrollRestoration='manual';  // 禁止浏览器原生恢复，避免覆盖脚本恢复
 const VKEY='ctb_view_v1';
 let _view={};try{_view=JSON.parse(localStorage.getItem(VKEY)||'{}')}catch(e){}
+// 色温三档（白日/阅读/夜读），随 ctb_view_v1 一起保存与恢复
+function applyTheme(t){document.body.dataset.theme=t;document.querySelectorAll('#themeSeg button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));}
+document.querySelectorAll('#themeSeg button').forEach(b=>{b.onclick=()=>{applyTheme(b.dataset.t);saveView();};});
+if(_view.t)applyTheme(_view.t);
 function curMode(){return document.body.classList.contains('view-terms')?'terms':document.body.classList.contains('view-know')?'know':'full'}
 // 位置锚定：记录滚动位置处最靠上的可见题卡（pid + 卡内偏移），新增题目导致位移后可精确回到原题
 function findAnchor(y){
@@ -4573,7 +4585,7 @@ function findAnchor(y){
   const pe=best.c.querySelector('.pid');
   return pe?{pid:pe.textContent,off:y-best.top}:null;
 }
-function saveView(){try{localStorage.setItem(VKEY,JSON.stringify({y:window.scrollY,a:findAnchor(window.scrollY),m:curMode()}))}catch(e){}}
+function saveView(){try{localStorage.setItem(VKEY,JSON.stringify({y:window.scrollY,a:findAnchor(window.scrollY),m:curMode(),t:document.body.dataset.theme}))}catch(e){}}
 let _svT=null;
 window.addEventListener('scroll',()=>{clearTimeout(_svT);_svT=setTimeout(saveView,200)},{passive:true});
 window.addEventListener('beforeunload',saveView);
